@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage
+	xmlns="http://xamarin.com/schemas/2014/forms"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	x:Class="SmartList.AddItemPage"
+	Title="New Item">
+	<ContentPage.Content>
+		<StackLayout HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="200">
+			<Entry Text="{Binding Name}" Placeholder="Name" HorizontalOptions="FillAndExpand"/>
+			<Picker x:Name="pckCategories" Title="Category" SelectedIndexChanged="Handle_SelectedIndexChanged" HorizontalOptions="FillAndExpand"/>
+			<Button Text="Add" Command="{Binding AddCommand}" CommandParameter="{Binding Item}" HorizontalOptions="FillAndExpand" />
+		</StackLayout>
+	</ContentPage.Content>
+</ContentPage>

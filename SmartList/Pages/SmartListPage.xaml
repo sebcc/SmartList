@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage
+	xmlns="http://xamarin.com/schemas/2014/forms"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	xmlns:local="clr-namespace:SmartList"
+	x:Class="SmartList.SmartListPage"
+	Title="Item">
+	<RelativeLayout>
+		<ContentView
+			RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
+			RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}">
+			<ListView
+				x:Name="lstItems"
+				ItemsSource="{Binding Items}" 
+				IsPullToRefreshEnabled="true"
+				RefreshCommand="{Binding LoadCommand}" 
+				IsRefreshing="{Binding IsRefreshing}"
+				HasUnevenRows="true"
+				SeparatorColor="#424242"
+				BackgroundColor="Transparent">
+				<ListView.ItemTemplate>
+					<DataTemplate>
+						<local:ItemViewCell/>
+					</DataTemplate>
+				</ListView.ItemTemplate>
+			</ListView>
+		</ContentView>
+		<Button
+			x:Name="btn"
+			Text="+"
+			FontSize="20"
+			WidthRequest="60"
+			HeightRequest="60"
+			BorderWidth="1"
+			BorderColor="Gray"
+			BorderRadius="30"
+			Clicked="Handle_Clicked"
+			RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-75}"
+			RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=-75}" >
+		</Button>
+	</RelativeLayout>
+</ContentPage>
