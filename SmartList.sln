@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartList.iOS", "iOS\SmartL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartList.Droid", "Droid\SmartList.Droid.csproj", "{706CDD03-50A8-474F-AA0A-2436144CF4C0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartList.Test", "SmartList.Test\SmartList.Test.csproj", "{3D6453F3-7E64-453D-8607-8C82228B0710}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,5 +55,17 @@ Global
 		{706CDD03-50A8-474F-AA0A-2436144CF4C0}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 		{706CDD03-50A8-474F-AA0A-2436144CF4C0}.Debug|iPhone.ActiveCfg = Debug|Any CPU
 		{706CDD03-50A8-474F-AA0A-2436144CF4C0}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{3D6453F3-7E64-453D-8607-8C82228B0710}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D6453F3-7E64-453D-8607-8C82228B0710}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D6453F3-7E64-453D-8607-8C82228B0710}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D6453F3-7E64-453D-8607-8C82228B0710}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D6453F3-7E64-453D-8607-8C82228B0710}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{3D6453F3-7E64-453D-8607-8C82228B0710}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{3D6453F3-7E64-453D-8607-8C82228B0710}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{3D6453F3-7E64-453D-8607-8C82228B0710}.Release|iPhone.Build.0 = Release|Any CPU
+		{3D6453F3-7E64-453D-8607-8C82228B0710}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{3D6453F3-7E64-453D-8607-8C82228B0710}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{3D6453F3-7E64-453D-8607-8C82228B0710}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{3D6453F3-7E64-453D-8607-8C82228B0710}.Debug|iPhone.Build.0 = Debug|Any CPU
 	EndGlobalSection
 EndGlobal
