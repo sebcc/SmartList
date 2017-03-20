@@ -3,6 +3,6 @@ namespace SmartList
 {
     public interface ILocalNotification
     {
-        void Notify (string title, string message);
+        void Notify (string title, string message, string itemId);
     }
 }

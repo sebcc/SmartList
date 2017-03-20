@@ -10,7 +10,7 @@
 		</StackLayout>
 	</ViewCell.View>
 	<ViewCell.ContextActions>
-        <MenuItem Command="{Binding DeleteCommand}" CommandParameter="{Binding .}"
+        <MenuItem Command="{Binding DeleteCommand}" CommandParameter="{Binding Id}"
            Text="Delete" IsDestructive="True" />
      </ViewCell.ContextActions>
 </ViewCell>

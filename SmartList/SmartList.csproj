@@ -73,6 +73,8 @@
     <Compile Include="Cells\ItemViewCell.xaml.cs">
       <DependentUpon>ItemViewCell.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Services\IApplicationState.cs" />
+    <Compile Include="Services\ApplicationState.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Xamarin.Forms.Core">

@@ -15,7 +15,7 @@ namespace SmartList.Droid
 {
     public class LocalNotification : ILocalNotification
     {
-        public void Notify (string title, string message)
+        public void Notify (string title, string message, string itemId)
         {
             var context = Application.Context;
             var resultIntent = new Intent (context, typeof (MainActivity));
@@ -25,20 +25,25 @@ namespace SmartList.Droid
                 resultIntent,
                 PendingIntentFlags.CancelCurrent);
 
+            var pickedUpIntent = new Intent ("PickedUp");
+            pickedUpIntent.PutExtra ("itemId", itemId);
+            var pendingPickedUpIntent = PendingIntent.GetBroadcast (context, 0, pickedUpIntent, PendingIntentFlags.CancelCurrent);
             var builder =
                 new Notification.Builder (context)
                     .SetContentTitle (title)
                     .SetContentText (message)
                     .SetSmallIcon (Resource.Drawable.icon)
-                    .SetDefaults (NotificationDefaults.All);
+                    .SetDefaults (NotificationDefaults.All)
+                    .SetVisibility (NotificationVisibility.Public);
 
             builder.SetContentIntent (pending);
+            var pickedUpAction = new Notification.Action (Resource.Drawable.abc_btn_check_material, "Picked Up", pendingPickedUpIntent);
+            builder.AddAction (pickedUpAction);
 
             var notification = builder.Build ();
-
+            notification.Flags = NotificationFlags.AutoCancel;
             var manager = NotificationManager.FromContext (context);
             manager.Notify (1337, notification);
-
         }
     }
 }

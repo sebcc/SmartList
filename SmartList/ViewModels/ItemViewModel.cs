@@ -17,14 +17,17 @@ namespace SmartList
         readonly ICommand deleteCommand;
         readonly ICategoriesService categoryService;
         private CancellationTokenSource cancellationTokenSource;
+        readonly IApplicationState applicationState;
 
         public ItemViewModel (
             Item item,
             IPlaces placesService,
             ILocalNotification localNotification,
             ICommand deleteCommand,
-            ICategoriesService categoryService)
+            ICategoriesService categoryService,
+            IApplicationState applicationState)
         {
+            this.applicationState = applicationState;
             this.cancellationTokenSource = new CancellationTokenSource ();
             this.categoryService = categoryService;
             this.localNotification = localNotification;
@@ -85,9 +88,15 @@ namespace SmartList
                     var closestPlace = places.OrderBy (p => DistanceHelper.DistanceBetween (position.Latitude, position.Longitude, p.Latitude, p.Longitude)).FirstOrDefault ();
                     this.Distance = DistanceHelper.DistanceBetween (position.Latitude, position.Longitude, closestPlace.Latitude, closestPlace.Longitude);
 
-                    if (this.Distance < 100)
+                    var distanceForNotification = 100;
+
+#if DEBUG
+                    distanceForNotification = 1000;
+#endif
+
+                    if (this.Distance <= distanceForNotification && !this.applicationState.GetState ())
                     {
-                        this.localNotification.Notify ("Close-by", "Don't forget about your item " + this.Name);
+                        this.localNotification.Notify ("Close-by", "Don't forget about your item " + this.Name, this.item.Id);
                     }
                 }
                 else

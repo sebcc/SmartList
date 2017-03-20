@@ -46,7 +46,7 @@ namespace SmartList
                 var placeApi = new GooglePlacesApi ();
                 foreach (var item in this.loadItemsCommand.Items)
                 {
-                    var itemViewModel = new ItemViewModel (item, placeApi, localNotification, deleteCommand, new CategoriesService ());
+                    var itemViewModel = new ItemViewModel (item, placeApi, localNotification, deleteCommand, new CategoriesService (), new ApplicationState ());
                     this.Items.Add (itemViewModel);
                 }
 

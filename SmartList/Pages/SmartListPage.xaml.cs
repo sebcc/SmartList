@@ -8,8 +8,6 @@ namespace SmartList
 {
     public partial class SmartListPage : ContentPage
     {
-        private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource ();
-
         public SmartListPage ()
         {
             InitializeComponent ();

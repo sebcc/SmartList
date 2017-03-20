@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
 using Newtonsoft.Json;
@@ -40,7 +41,7 @@ namespace SmartList
 
         public async void Execute (object parameter)
         {
-            var itemViewModel = parameter as ItemViewModel;
+            var itemId = parameter as string;
             var items = new List<Item> ();
             var itemsFolder = await this.rootFolder.CreateFolderAsync ("items", CreationCollisionOption.OpenIfExists);
 
@@ -51,7 +52,7 @@ namespace SmartList
                 items = JsonConvert.DeserializeObject<List<Item>> (itemsContent);
             }
 
-            var item = items.FirstOrDefault (i => i.Id == itemViewModel.Id);
+            var item = items.FirstOrDefault (i => i.Id == itemId);
             items.Remove (item);
 
             this.deletedItem = item;
