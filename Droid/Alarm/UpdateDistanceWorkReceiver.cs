@@ -22,7 +22,7 @@ namespace SmartList.Droid
             var locator = CrossGeolocator.Current;
             locator.DesiredAccuracy = 50;
             var itemsViewModel = new ItemsViewModel (
-                locator,
+                new GeolocatorFacade (locator),
                 this.localNotification,
                 new LoadItemsCommand (FileSystem.Current.LocalStorage),
                 new DeleteItemCommand (FileSystem.Current.LocalStorage));

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Windows.Input;
@@ -18,23 +19,39 @@ namespace SmartList
         readonly ICategoriesService categoryService;
         private CancellationTokenSource cancellationTokenSource;
         readonly IApplicationState applicationState;
+        readonly ICommandResult<double> closestPlacesCommand;
 
         public ItemViewModel (
             Item item,
-            IPlaces placesService,
+            ICommandResult<double> closestPlacesCommand,
             ILocalNotification localNotification,
             ICommand deleteCommand,
             ICategoriesService categoryService,
             IApplicationState applicationState)
         {
+            this.closestPlacesCommand = closestPlacesCommand;
             this.applicationState = applicationState;
             this.cancellationTokenSource = new CancellationTokenSource ();
             this.categoryService = categoryService;
             this.localNotification = localNotification;
             this.position = null;
-            this.placesService = placesService;
             this.item = item;
             this.deleteCommand = deleteCommand;
+
+            this.closestPlacesCommand.Executed += (sender, e) => {
+                this.Distance = this.closestPlacesCommand.Result;
+
+                var distanceForNotification = 100;
+
+#if DEBUG
+                distanceForNotification = 1000;
+#endif
+
+                if (this.Distance <= distanceForNotification && !this.applicationState.GetState ())
+                {
+                    this.localNotification.Notify ("Close-by", "Don't forget about your item " + this.Name, this.item.Id);
+                }
+            };
         }
 
         public string Name
@@ -74,42 +91,12 @@ namespace SmartList
             }
         }
 
-        public void UpdatePosition (Position position)
+        public ICommandResult<double> LoadClosestPlace
         {
-            this.position = position;
-
-            if (this.position != null && !string.IsNullOrEmpty (this.item.CategoryId))
+            get
             {
-                var category = this.categoryService.FetchCategories ().FirstOrDefault ((arg) => arg.Id == this.item.CategoryId);
-                if (category != null)
-                {
-                    var places = this.placesService.FetchPlacesAsync (position.Latitude, position.Longitude, category.GooglePlaceName, cancellationTokenSource.Token).Result;
-
-                    var closestPlace = places.OrderBy (p => DistanceHelper.DistanceBetween (position.Latitude, position.Longitude, p.Latitude, p.Longitude)).FirstOrDefault ();
-                    this.Distance = DistanceHelper.DistanceBetween (position.Latitude, position.Longitude, closestPlace.Latitude, closestPlace.Longitude);
-
-                    var distanceForNotification = 100;
-
-#if DEBUG
-                    distanceForNotification = 1000;
-#endif
-
-                    if (this.Distance <= distanceForNotification && !this.applicationState.GetState ())
-                    {
-                        this.localNotification.Notify ("Close-by", "Don't forget about your item " + this.Name, this.item.Id);
-                    }
-                }
-                else
-                {
-                    this.Distance = double.NaN;
-                }
-
+                return this.closestPlacesCommand;
             }
-            else
-            {
-                this.Distance = double.NaN;
-            }
-
         }
 
         public void Cancel ()

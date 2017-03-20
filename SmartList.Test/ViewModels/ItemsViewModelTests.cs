@@ -21,7 +21,7 @@ namespace SmartList.Test
             items.Add (new Item () { CategoryId = "4", Id = Guid.NewGuid ().ToString (), Name = "Item-2" });
             items.Add (new Item () { CategoryId = "4", Id = Guid.NewGuid ().ToString (), Name = "Item-3" });
 
-            var geoMock = new Mock<IGeolocator> ();
+            var geoMock = new Mock<IGeolocatorService> ();
             var localNotificationMock = new Mock<ILocalNotification> ();
             var loadItemsCommandMock = new Mock<ICommandResult<List<Item>>> ();
             loadItemsCommandMock.Setup (lic => lic.Result).Returns (items);

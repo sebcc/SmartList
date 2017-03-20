@@ -23,7 +23,7 @@ namespace SmartList
                 locator.DesiredAccuracy = 50;
 
                 this.BindingContext = new ItemsViewModel (
-                    locator,
+                    new GeolocatorFacade (locator),
                     DependencyService.Get<ILocalNotification> (),
                     new LoadItemsCommand (FileSystem.Current.LocalStorage),
                     new DeleteItemCommand (FileSystem.Current.LocalStorage));

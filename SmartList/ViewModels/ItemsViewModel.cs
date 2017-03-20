@@ -25,10 +25,9 @@ namespace SmartList
             set;
         }
 
-        readonly IGeolocator geolocator;
 
         public ItemsViewModel (
-            IGeolocator geolocator,
+            IGeolocatorService geolocator,
             ILocalNotification localNotification,
             ICommandResult<List<Item>> loadItemsCommand,
             ICommandResult<Item> deleteCommand)
@@ -42,7 +41,6 @@ namespace SmartList
                 this.Items.Remove (itemFromList);
             };
 
-            this.geolocator = geolocator;
             this.Items = new ObservableCollection<ItemViewModel> ();
             this.loadItemsCommand.Executed += (sender, e) => {
                 this.IsRefreshing = false;
@@ -53,23 +51,15 @@ namespace SmartList
                 {
                     var itemViewModel = new ItemViewModel (
                         item,
-                        placeApi,
+                        new FindClosestPlacesCommand (placeApi, geolocator, new CategoriesService (), this.cancellationTokenSource.Token),
                         localNotification,
                         deleteCommand,
                         new CategoriesService (),
                         new ApplicationState ());
 
                     this.Items.Add (itemViewModel);
+                    itemViewModel.LoadClosestPlace.Execute (item);
                 }
-
-                this.geolocator.GetPositionAsync (token: this.cancellationTokenSource.Token).ContinueWith ((arg) => {
-                    this.position = arg.Result;
-                    foreach (var item in this.Items)
-                    {
-                        item.UpdatePosition (this.position);
-                    }
-                });
-
             };
         }
 
