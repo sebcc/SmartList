@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
@@ -11,8 +12,8 @@ namespace SmartList
 {
     public class ItemsViewModel : BaseViewModel
     {
-        private LoadItemsCommand loadItemsCommand;
-        private DeleteItemCommand deleteCommand;
+        private ICommandResult<List<Item>> loadItemsCommand;
+        private ICommandResult<Item> deleteCommand;
         private CancellationTokenSource cancellationTokenSource;
 
         private bool isRefreshing = false;
@@ -26,27 +27,38 @@ namespace SmartList
 
         readonly IGeolocator geolocator;
 
-        public ItemsViewModel (IGeolocator geolocator, ILocalNotification localNotification)
+        public ItemsViewModel (
+            IGeolocator geolocator,
+            ILocalNotification localNotification,
+            ICommandResult<List<Item>> loadItemsCommand,
+            ICommandResult<Item> deleteCommand)
         {
+            this.loadItemsCommand = loadItemsCommand;
+            this.deleteCommand = deleteCommand;
             this.cancellationTokenSource = new CancellationTokenSource ();
 
-            this.deleteCommand = new DeleteItemCommand (FileSystem.Current.LocalStorage);
-            this.deleteCommand.Deleted += (sender, e) => {
-                var itemFromList = this.Items.First (i => i.Id == this.deleteCommand.DeletedItem.Id);
+            this.deleteCommand.Executed += (sender, e) => {
+                var itemFromList = this.Items.First (i => i.Id == this.deleteCommand.Result.Id);
                 this.Items.Remove (itemFromList);
             };
 
             this.geolocator = geolocator;
             this.Items = new ObservableCollection<ItemViewModel> ();
-            this.loadItemsCommand = new LoadItemsCommand (FileSystem.Current.LocalStorage);
-            this.loadItemsCommand.Loaded += (sender, e) => {
+            this.loadItemsCommand.Executed += (sender, e) => {
                 this.IsRefreshing = false;
                 this.Items.Clear ();
 
                 var placeApi = new GooglePlacesApi ();
-                foreach (var item in this.loadItemsCommand.Items)
+                foreach (var item in this.loadItemsCommand.Result)
                 {
-                    var itemViewModel = new ItemViewModel (item, placeApi, localNotification, deleteCommand, new CategoriesService (), new ApplicationState ());
+                    var itemViewModel = new ItemViewModel (
+                        item,
+                        placeApi,
+                        localNotification,
+                        deleteCommand,
+                        new CategoriesService (),
+                        new ApplicationState ());
+
                     this.Items.Add (itemViewModel);
                 }
 

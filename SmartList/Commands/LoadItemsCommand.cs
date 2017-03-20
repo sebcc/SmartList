@@ -6,7 +6,7 @@ using PCLStorage;
 
 namespace SmartList
 {
-    public class LoadItemsCommand : ICommand
+    public class LoadItemsCommand : ICommandResult<List<Item>>
     {
         IFolder rootFolder;
         List<Item> items = new List<Item> ();
@@ -18,17 +18,13 @@ namespace SmartList
 
         public event EventHandler CanExecuteChanged;
 
-        public event EventHandler Loaded;
+        public event EventHandler Executed;
 
-        public List<Item> Items
+        public List<Item> Result
         {
             get
             {
                 return this.items;
-            }
-            private set
-            {
-                this.items = value;
             }
         }
 
@@ -37,21 +33,23 @@ namespace SmartList
             return true;
         }
 
-        public async void Execute (object parameter)
+        public void Execute (object parameter)
         {
-            var itemsFolder = await this.rootFolder.CreateFolderAsync ("items", CreationCollisionOption.OpenIfExists);
-
-            var itemsFile = await itemsFolder.CreateFileAsync ("items.data", CreationCollisionOption.OpenIfExists);
-            var itemsContent = await itemsFile.ReadAllTextAsync ();
-            if (!string.IsNullOrWhiteSpace (itemsContent))
+            var itemsFolder = this.rootFolder.CreateFolderAsync ("items", CreationCollisionOption.OpenIfExists);
+            itemsFolder.Wait ();
+            var itemsFile = itemsFolder.Result.CreateFileAsync ("items.data", CreationCollisionOption.OpenIfExists);
+            itemsFile.Wait ();
+            var itemsContent = itemsFile.Result.ReadAllTextAsync ();
+            itemsContent.Wait ();
+            if (!string.IsNullOrWhiteSpace (itemsContent.Result))
             {
-                this.items = JsonConvert.DeserializeObject<List<Item>> (itemsContent);
+                this.items = JsonConvert.DeserializeObject<List<Item>> (itemsContent.Result);
             }
 
 
-            if (this.Loaded != null)
+            if (this.Executed != null)
             {
-                this.Loaded.Invoke (this, new EventArgs ());
+                this.Executed.Invoke (this, new EventArgs ());
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using Android.App;
 using Android.Content;
+using PCLStorage;
 using Plugin.Geolocator;
 using Xamarin.Forms;
 
@@ -20,7 +21,11 @@ namespace SmartList.Droid
         {
             var locator = CrossGeolocator.Current;
             locator.DesiredAccuracy = 50;
-            var itemsViewModel = new ItemsViewModel (locator, this.localNotification);
+            var itemsViewModel = new ItemsViewModel (
+                locator,
+                this.localNotification,
+                new LoadItemsCommand (FileSystem.Current.LocalStorage),
+                new DeleteItemCommand (FileSystem.Current.LocalStorage));
             itemsViewModel.LoadCommand.Execute (null);
         }
     }

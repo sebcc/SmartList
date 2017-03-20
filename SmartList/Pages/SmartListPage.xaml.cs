@@ -24,7 +24,9 @@ namespace SmartList
 
                 this.BindingContext = new ItemsViewModel (
                     locator,
-                    DependencyService.Get<ILocalNotification> ());
+                    DependencyService.Get<ILocalNotification> (),
+                    new LoadItemsCommand (FileSystem.Current.LocalStorage),
+                    new DeleteItemCommand (FileSystem.Current.LocalStorage));
             }
 
             var itemsViewModel = this.lstItems.BindingContext as ItemsViewModel;
@@ -38,7 +40,6 @@ namespace SmartList
             }
 
             itemsViewModel.LoadCommand.Execute (null);
-
 
             this.lstItems.ItemTapped += (sender, e) => {
                 if (e == null) return; // has been set to null, do not 'process' tapped event

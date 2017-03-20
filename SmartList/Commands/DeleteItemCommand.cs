@@ -8,7 +8,7 @@ using PCLStorage;
 
 namespace SmartList
 {
-    public class DeleteItemCommand : ICommand
+    public class DeleteItemCommand : ICommandResult<Item>
     {
         IFolder rootFolder;
         Item deletedItem;
@@ -20,17 +20,13 @@ namespace SmartList
 
         public event EventHandler CanExecuteChanged;
 
-        public event EventHandler Deleted;
+        public event EventHandler Executed;
 
-        public Item DeletedItem
+        public Item Result
         {
             get
             {
                 return this.deletedItem;
-            }
-            private set
-            {
-                this.deletedItem = value;
             }
         }
 
@@ -59,9 +55,9 @@ namespace SmartList
             itemsContent = JsonConvert.SerializeObject (items);
             await itemsFile.WriteAllTextAsync (itemsContent);
 
-            if (this.Deleted != null)
+            if (this.Executed != null)
             {
-                this.Deleted.Invoke (this, new EventArgs ());
+                this.Executed.Invoke (this, new EventArgs ());
             }
         }
     }

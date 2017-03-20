@@ -75,6 +75,8 @@
     </Compile>
     <Compile Include="Services\IApplicationState.cs" />
     <Compile Include="Services\ApplicationState.cs" />
+    <Compile Include="Commands\ICommandResult.cs" />
+    <Compile Include="Commands\IEventCommand.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Xamarin.Forms.Core">
